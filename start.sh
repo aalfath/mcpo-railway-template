@@ -5,7 +5,7 @@ set -eu
 
 DATA="${MCPO_DATA_DIR:-/data}"
 CONFIG="$DATA/config.json"
-mkdir -p "$DATA" "$DATA/.cache"
+mkdir -p "$DATA" "$DATA/.cache" "$DATA/files"
 
 if [ -z "${MCPO_API_KEY:-}" ]; then
   echo "start.sh: MCPO_API_KEY is empty. Set it (the template generates one) so the API is not open to everyone." >&2

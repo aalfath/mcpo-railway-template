@@ -17,7 +17,7 @@ One service, `mcpo`, with:
   - `fetch` (fetch a web page and return it as Markdown);
 - a Railway volume at `/data` that holds `config.json`, the memory graph and the uv/npm caches of any MCP server you add;
 - `/healthz` (no key needed): 200 once at least one MCP server is connected, 503 otherwise;
-- Python (`uvx`) and Node.js 22 (`npx`) in the image, so most stdio MCP servers can be added by config alone.
+- Python (`uvx`) and Node.js 24 LTS (`npx`) in the image, so most stdio MCP servers can be added by config alone.
 
 Each MCP server gets its own route and docs: `https://YOUR-DOMAIN/time/docs`, `/memory/docs`, `/fetch/docs`. The tool list is at `https://YOUR-DOMAIN/docs`.
 
@@ -51,7 +51,7 @@ Set `MCPO_CONFIG` to a config in the [Claude Desktop format mcpo reads](https://
 {"mcpServers":{
   "time":{"command":"mcp-server-time","args":["--local-timezone=UTC"]},
   "github":{"type":"streamable-http","url":"https://api.githubcopilot.com/mcp/","headers":{"Authorization":"Bearer YOUR-GITHUB-TOKEN"}},
-  "sqlite":{"command":"uvx","args":["mcp-server-sqlite","--db-path","/data/test.db"]}
+  "files":{"command":"npx","args":["-y","@modelcontextprotocol/server-filesystem@2.4.0","/data/files"]}
 }}
 ```
 
@@ -64,7 +64,7 @@ If the config is invalid or no server can connect, the service fails its health 
 
 ## Resources
 
-mcpo with the three example servers idles at about 150 MB and fits Railway's Free plan (0.5 GB). Each stdio MCP server is its own process, so heavy servers (browsers, Node servers with big dependency trees) add their own memory: size the service for what you add.
+mcpo with the three example servers idles at about 190 MB and fits Railway's Free plan (0.5 GB). Each stdio MCP server is its own process, so heavy servers (browsers, Node servers with big dependency trees) add their own memory: size the service for what you add.
 
 ## Not included
 
