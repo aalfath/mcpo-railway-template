@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "time": {
+      "command": "mcp-server-time",
+      "args": ["--local-timezone=UTC"]
+    },
+    "memory": {
+      "command": "mcp-server-memory",
+      "env": { "MEMORY_FILE_PATH": "/data/memory.jsonl" }
+    },
+    "fetch": {
+      "command": "mcp-server-fetch"
+    }
+  }
+}
