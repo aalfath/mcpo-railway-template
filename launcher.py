@@ -1,6 +1,7 @@
 """Run mcpo with Railway-friendly defaults.
 
-* listens on $PORT on all IPv4 and IPv6 addresses (Railway's private network is IPv6);
+* listens on $PORT on every IPv4 and IPv6 address (Railway's private network is
+  IPv6; asyncio gives a "::" socket IPV6_V6ONLY, so we bind host "" = both families);
 * requires MCPO_API_KEY and protects every route, docs included (--strict-auth);
 * adds an unauthenticated /healthz (200 once at least one MCP server is connected)
   and redirects / to /docs;
@@ -49,6 +50,7 @@ _Config = uvicorn.Config
 
 class RailwayConfig(_Config):
     def __init__(self, app, *args, **kwargs):
+        kwargs["host"] = ""  # asyncio: one socket per address family
         kwargs.setdefault("proxy_headers", True)
         kwargs.setdefault("forwarded_allow_ips", "*")
         super().__init__(railway_wrap(app), *args, **kwargs)
@@ -72,7 +74,7 @@ def _flag_signal(self, sig, frame=None):
 
 mcpo.main.GracefulShutdown.handle_signal = _flag_signal
 
-argv = ["mcpo", "--host", "::", "--port", port, "--api-key", api_key,
+argv = ["mcpo", "--host", "0.0.0.0", "--port", port, "--api-key", api_key,
         "--config", config, "--hot-reload"]
 if strict:
     argv.append("--strict-auth")
